@@ -8,8 +8,14 @@
 import UIKit
 
 class ViewController: UICollectionViewController {
-    var images = [UIImage]()
-    let tolerance: Float = 0.7
+    let viewModel = ViewModel()
+    let mode: Mode = .linearMarching
+    
+    enum Mode {
+        case bubbleLooping
+        case nodeClustering
+        case linearMarching
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,15 +31,40 @@ class ViewController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        self.images.count
+        self.viewModel.images.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? Cell
         else { return UICollectionViewCell() }
         
-        cell.imageView.image = self.images[indexPath.item]
+        cell.imageView.image = self.viewModel.images[indexPath.item]
         
         return cell
+    }
+    
+    func processing() {
+        switch self.mode {
+        case .bubbleLooping: self.viewModel.bubbleLooping(completion: { [weak self] in
+            guard let `self` = self else { return }
+            self.collectionView.reloadData()
+            
+            self.hideLoading()
+        })
+            
+        case .nodeClustering: self.viewModel.nodeClustering(completion: { [weak self] in
+            guard let `self` = self else { return }
+            self.collectionView.reloadData()
+            
+            self.hideLoading()
+        })
+            
+        case .linearMarching: self.viewModel.linearMarching(completion: { [weak self] in
+            guard let `self` = self else { return }
+            self.collectionView.reloadData()
+            
+            self.hideLoading()
+        })
+        }
     }
 }

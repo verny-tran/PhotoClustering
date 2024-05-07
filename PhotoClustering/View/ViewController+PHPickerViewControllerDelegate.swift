@@ -25,7 +25,7 @@ extension ViewController: PHPickerViewControllerDelegate {
         picker.dismiss(animated: true)
         
         self.showLoading()
-        self.images.removeAll()
+        self.viewModel.images.removeAll()
         
         let itemProviders = results.map { $0.itemProvider }
             .filter { $0.canLoadObject(ofClass: UIImage.self) }
@@ -39,19 +39,12 @@ extension ViewController: PHPickerViewControllerDelegate {
                 if let error = error { Logger().error("itemProvider.loadObject \(error.localizedDescription)") }
                 
                 guard let image = image as? UIImage else { return }
-                self.images.append(image)
+                self.viewModel.images.append(image)
                 
                 dispatchGroup.leave()
             }
         }
         
-        dispatchGroup.notify(queue: .main) {
-            self.calculate(completion: { images in
-                self.images = images
-                self.hideLoading()
-                
-                self.collectionView.reloadData()
-            })
-        }
+        dispatchGroup.notify(queue: .main) { self.processing() }
     }
 }
