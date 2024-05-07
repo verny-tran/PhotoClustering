@@ -9,6 +9,18 @@ import OSLog
 import PhotosUI
 
 extension ViewController: PHPickerViewControllerDelegate {
+    @objc
+    func pick() {
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 1000
+        configuration.filter = .images
+        
+        let pickerViewController = PHPickerViewController(configuration: configuration)
+        pickerViewController.delegate = self
+        
+        self.present(pickerViewController, animated: true)
+    }
+    
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
         
@@ -34,8 +46,12 @@ extension ViewController: PHPickerViewControllerDelegate {
         }
         
         dispatchGroup.notify(queue: .main) {
-            self.collectionView.reloadData()
-            self.hideLoading()
+            self.calculate(completion: { images in
+                self.images = images
+                self.hideLoading()
+                
+                self.collectionView.reloadData()
+            })
         }
     }
 }

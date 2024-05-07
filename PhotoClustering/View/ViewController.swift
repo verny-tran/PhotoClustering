@@ -6,10 +6,10 @@
 //
 
 import UIKit
-import PhotosUI
 
 class ViewController: UICollectionViewController {
     var images = [UIImage]()
+    let tolerance: Float = 0.7
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,21 +23,7 @@ class ViewController: UICollectionViewController {
             target: self, action: #selector(pick)
         )
     }
-
-    @objc 
-    func pick() {
-        var configuration = PHPickerConfiguration()
-        configuration.selectionLimit = 1000
-        configuration.filter = .images
-        
-        let pickerViewController = PHPickerViewController(configuration: configuration)
-        pickerViewController.delegate = self
-        
-        self.present(pickerViewController, animated: true)
-    }
-}
-
-extension ViewController {
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         self.images.count
     }
