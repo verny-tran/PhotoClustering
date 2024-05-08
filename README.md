@@ -14,7 +14,7 @@
 
 |  Import photos  |  Mode seletion  |  Execution results  |  Groups  |
 |      :----:     |     :----:      |       :----:        |  :----:  |
-| ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Import.png) |![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Seletion.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Result.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Groups.png) |
+| ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Import.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Seletion.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Result.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Groups.png) |
 
 __Known issue:__ 
 
@@ -22,7 +22,64 @@ This app employed [**PHPickerViewController**](https://developer.apple.com/docum
 
 A possible solution is to switch to [**PHImageManager**](https://developer.apple.com/documentation/photokit/phimagemanager) and use [`requestImage(for:)`](https://developer.apple.com/documentation/photokit/phimagemanager/1616964-requestimage). However, I will not implement it right now.
 
-## Approaches
+## Methodology
+
+### Huge Photo Batch Loading
+
+To optimize the loading of the image batch, we should not load the highest resolution version of them of course. To load only the image's mini-sized thumbnails, we specified the maximum number of pixels that should be in the thumbnail in [**PHPickerViewControllerDelegate**](https://developer.apple.com/documentation/photokit/phpickerviewcontrollerdelegate) using [kCGImageSourceThumbnailMaxPixelSize](https://developer.apple.com/documentation/imageio/kcgimagesourcethumbnailmaxpixelsize). Pass the entire `downsampleOptions` to the constructor [CGImageSourceCreateThumbnailAtIndex](https://developer.apple.com/documentation/imageio/1465099-cgimagesourcecreatethumbnailatin) and retrieve its data; proceed with the data only. Use a [DispatchGroup](https://developer.apple.com/documentation/dispatch/dispatchgroup) to optimize those procedures. The whoel process is as follows:
+
+```swift
+let dispatchGroup = DispatchGroup()
+let dispatchQueue = DispatchQueue(label: "com.verny.PhotoClustering")
+
+let itemProviders = results.map { $0.itemProvider }
+    .filter { $0.hasItemConformingToTypeIdentifier(UTType.image.identifier) }
+
+itemProviders.forEach { itemProvider in
+    dispatchGroup.enter()
+    
+    itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.image.identifier) { url, error in
+        if let error = error { Logger().error("itemProvider.loadFileRepresentation \(error.localizedDescription)") }
+        
+        guard let url = url else { dispatchGroup.leave(); return }
+        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, sourceOptions) else { dispatchGroup.leave(); return }
+        let downsampleOptions = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: 300,
+        ] as CFDictionary
+        
+        guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOptions) else { dispatchGroup.leave(); return }
+        let data = NSMutableData()
+        
+        guard let imageDestination = CGImageDestinationCreateWithData(data, UTType.jpeg.identifier as CFString, 1, nil) else { return }
+        
+        let isPNG: Bool = {
+            guard let utType = cgImage.utType else { return false }
+            return (utType as String) == UTType.png.identifier
+        }()
+        
+        let destinationProperties = [kCGImageDestinationLossyCompressionQuality: isPNG ? 1.0 : 0.75] as CFDictionary
+        
+        CGImageDestinationAddImage(imageDestination, cgImage, destinationProperties)
+        CGImageDestinationFinalize(imageDestination)
+        
+        dispatchQueue.sync {
+            guard let image = UIImage(data: data as Data) else { dispatchGroup.leave(); return }
+            self.viewModel.images.append(image)
+        }
+        
+        dispatchGroup.leave()
+    }
+}
+
+dispatchGroup.notify(queue: .main) {
+    DispatchQueue.main.async { self.processing() }
+}
+
+```
 
 ### Feature Print Observation
 
@@ -67,7 +124,7 @@ let threshold: Float = 10.0
 
 **DISCUSSION:** The function's goal is to generate an **undirected graph** with vertices connected by *weighted edges* (which in this case is the distance of similarity between the photos). The *lower the edge value*, the *more similar* the vertices connected by that edge. This function creates *clusters* for the *specified graph*, with each cluster including vertices that are similar to one another.
 
-The construction of the cluster is determined by the **threshold** value supplied as input. If the *weight of an edge* between two clusters divided by the *minimum weight of clusters* is *less than or equal* to the *tolerance threshold*, the two clusters are *combined into a single cluster*. By default, each vertex is a cluster with a weight of `1`.
+The construction of the clusters is determined by the **threshold** value supplied as input. If the *weight of an edge* between two clusters divided by the *minimum weight of clusters* is *less than or equal* to the *tolerance threshold*, the two clusters are *combined into a single cluster*. By default, each vertex is a cluster with a weight of `1`.
 
 ### 2. Linear Marching
 
