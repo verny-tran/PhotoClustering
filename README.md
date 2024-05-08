@@ -14,7 +14,7 @@
 
 |  Import photos  |  Mode seletion  |  Execution results  |  Groups  |
 |      :----:     |     :----:      |       :----:        |  :----:  |
-| ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Import.png) | | | |
+| ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Import.png) |![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Seletion.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Result.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Groups.png) |
 
 __Known issue:__ 
 
