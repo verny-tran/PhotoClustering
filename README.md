@@ -15,6 +15,7 @@
 |  Import photos  |  Mode selection  |
 |      :----:     |      :----:      |
 | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Import.png) | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Selection.png) |
+
 |  Execution results  |  Groups  |
 |       :----:        |  :----:  |
 | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Result.png) | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Groups.png) |
