@@ -8,6 +8,17 @@
 import UIKit
 
 extension UIViewController {
+    public func showDialog(title: String? = nil, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        self.present(alertController, animated: true)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            alertController.dismiss(animated: true)
+        }
+    }
+}
+
+extension UIViewController {
     public func showLoading() {
         DispatchQueue.main.async {
             let blurEffect = UIBlurEffect(style: .systemUltraThinMaterial)

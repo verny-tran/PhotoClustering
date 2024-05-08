@@ -9,41 +9,37 @@ import Foundation
 
 class Clustering {
     var graph: Graph
-
-    /// Constructor to initialize the Graph
+    
+    /// Constructor to `initialize the graph`.
     ///
     init() { self.graph = Graph() }
-
-    /// Adds given source, destination and weight to priority queue.
+    
+    /// Adds given `source, destination and weight` to priority queue.
     ///
     /// - Parameters:
-    ///   - vertex1:
-    ///   - vertex2:
-    ///   - weight:
-    ///
-    /// - Returns:
+    ///   - vertex1: The first vertex.
+    ///   - vertex2: The second vertex.
+    ///   - weight: The weight of the connection between the vertexes.
     ///
     func addEdge(_ edge: (vertex1: Int, vertex2: Int, weight: Float)) {
-        /// Returns false if given vertex is blank or -ve weight
-        /// or node edge already exists in the PQueue.
-        if edge.vertex1 != edge.vertex2 && edge.weight > 0 &&
-            !self.graph.isEdgeExists(edge.vertex1, edge.vertex2) {
+        /// Returns ``false`` if given vertex `is blank` or 
+        /// *-ve weight of node edge* already exists` in the <PriorityQueue>.
+        if edge.vertex1 != edge.vertex2 && edge.weight > 0 && !self.graph.isEdgeExists(edge.vertex1, edge.vertex2) {
             
             let edge = Edge(from: edge.vertex1, to: edge.vertex2, with: edge.weight)
             self.graph.priorityQueue.enqueue(edge)
         }
     }
-
-    /// This method forms the clusters from the given graph.
+    
+    /// This method `forms the clusters` from the given graph.
     ///
-    /// - Parameters:
-    ///   - tolerance:
+    /// - Parameter tolerance: The clustering predefined tolerance.
+    /// 
+    /// - Returns: The clusters of grouped nodes.
     ///
-    /// - Returns:
-    ///
-    func clusterVertices(with tolerance: Float) -> Set<Set<Int>>? {
-        /// Proceed only if tolerance is non -ve value.
-        guard tolerance >= 0 else { return nil }
+    func clusterVertices(with threshold: Float) -> Set<Set<Int>>? {
+        /// Proceed only if `threshold is non -ve` value.
+        guard threshold >= 0 else { return nil }
         
         var priorityQueue = PriorityQueue<Edge>(order: { $0.weight < $1.weight })
         for edge in self.graph.priorityQueue.elements { priorityQueue.enqueue(edge) }
@@ -51,17 +47,17 @@ class Clustering {
         while !self.graph.priorityQueue.elements.isEmpty {
             let edge = self.graph.priorityQueue.elements.removeFirst()
             
-            /// For first edge, directly add the edge to the graph.
+            /// For `first edge`, directly add the edge to the graph.
             if !self.graph.map.isEmpty {
                 
-                /// If edge doesn't creates loop, add edge to graph.
+                /// If edge `doesn't creates loop`, add edge to graph.
                 var set = Set<Int>()
                 
                 if self.graph.isLoop(from: edge.source, to: edge.destination, assignTo: &set) {
-                    self.graph.addEdgeToMap(from: edge.source, to: edge.destination, with: edge.weight, at: tolerance)
+                    self.graph.addEdgeToMap(from: edge.source, to: edge.destination, with: edge.weight, at: threshold)
                 }
             } else {
-                self.graph.addEdgeToMap(from: edge.source, to: edge.destination, with: edge.weight, at: tolerance)
+                self.graph.addEdgeToMap(from: edge.source, to: edge.destination, with: edge.weight, at: threshold)
             }
         }
         

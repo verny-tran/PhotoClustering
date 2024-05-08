@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D6B7C83D2BEB24A100D3FE24 /* ViewController+UIPopoverPresentationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B7C83C2BEB24A100D3FE24 /* ViewController+UIPopoverPresentationControllerDelegate.swift */; };
+		D6B7C83F2BEB263600D3FE24 /* OptionsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B7C83E2BEB263600D3FE24 /* OptionsListController.swift */; };
+		D6B7C8412BEB3A9500D3FE24 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B7C8402BEB3A9500D3FE24 /* TimeInterval.swift */; };
+		D6B7C8432BEB88FA00D3FE24 /* ObjectAssociation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B7C8422BEB88FA00D3FE24 /* ObjectAssociation.swift */; };
 		D6E4B6042BEA691300A302E8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E4B6032BEA691300A302E8 /* AppDelegate.swift */; };
 		D6E4B6062BEA691300A302E8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E4B6052BEA691300A302E8 /* SceneDelegate.swift */; };
 		D6E4B6082BEA691300A302E8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E4B6072BEA691300A302E8 /* ViewController.swift */; };
@@ -32,6 +36,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D6B7C83C2BEB24A100D3FE24 /* ViewController+UIPopoverPresentationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+UIPopoverPresentationControllerDelegate.swift"; sourceTree = "<group>"; };
+		D6B7C83E2BEB263600D3FE24 /* OptionsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsListController.swift; sourceTree = "<group>"; };
+		D6B7C8402BEB3A9500D3FE24 /* TimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeInterval.swift; sourceTree = "<group>"; };
+		D6B7C8422BEB88FA00D3FE24 /* ObjectAssociation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectAssociation.swift; sourceTree = "<group>"; };
 		D6E4B6002BEA691300A302E8 /* PhotoClustering.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoClustering.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6E4B6032BEA691300A302E8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D6E4B6052BEA691300A302E8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +104,7 @@
 				D6E4B60E2BEA691600A302E8 /* LaunchScreen.storyboard */,
 				D6E4B6032BEA691300A302E8 /* AppDelegate.swift */,
 				D6E4B6052BEA691300A302E8 /* SceneDelegate.swift */,
+				D6B7C8422BEB88FA00D3FE24 /* ObjectAssociation.swift */,
 				D6E4B6222BEA732700A302E8 /* Extensions */,
 				D6E4B62D2BEA91FC00A302E8 /* Clustering */,
 				D6E4B61B2BEA6E3300A302E8 /* View */,
@@ -111,6 +120,8 @@
 				D6E4B63C2BEAAFF700A302E8 /* ViewModel.swift */,
 				D6E4B6072BEA691300A302E8 /* ViewController.swift */,
 				D6E4B61C2BEA6E4D00A302E8 /* ViewController+PHPickerViewControllerDelegate.swift */,
+				D6B7C83C2BEB24A100D3FE24 /* ViewController+UIPopoverPresentationControllerDelegate.swift */,
+				D6B7C83E2BEB263600D3FE24 /* OptionsListController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -120,6 +131,7 @@
 			children = (
 				D6E4B6382BEA9D3200A302E8 /* String.swift */,
 				D6E4B62B2BEA7E9300A302E8 /* Collection.swift */,
+				D6B7C8402BEB3A9500D3FE24 /* TimeInterval.swift */,
 				D6E4B6272BEA747400A302E8 /* UIImage.swift */,
 				D6E4B6252BEA735E00A302E8 /* UIView.swift */,
 				D6E4B6232BEA733500A302E8 /* UIViewController.swift */,
@@ -213,14 +225,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6E4B6262BEA735E00A302E8 /* UIView.swift in Sources */,
+				D6B7C8412BEB3A9500D3FE24 /* TimeInterval.swift in Sources */,
+				D6B7C83F2BEB263600D3FE24 /* OptionsListController.swift in Sources */,
 				D6E4B6312BEA92BD00A302E8 /* SimpleClustering.swift in Sources */,
 				D6E4B6332BEA938900A302E8 /* Graph.swift in Sources */,
 				D6E4B6242BEA733500A302E8 /* UIViewController.swift in Sources */,
 				D6E4B61D2BEA6E4D00A302E8 /* ViewController+PHPickerViewControllerDelegate.swift in Sources */,
 				D6E4B6372BEA94BB00A302E8 /* PriorityQueue.swift in Sources */,
 				D6E4B6082BEA691300A302E8 /* ViewController.swift in Sources */,
+				D6B7C83D2BEB24A100D3FE24 /* ViewController+UIPopoverPresentationControllerDelegate.swift in Sources */,
 				D6E4B61F2BEA6F1100A302E8 /* FlowLayout.swift in Sources */,
 				D6E4B6352BEA93BA00A302E8 /* Edge.swift in Sources */,
+				D6B7C8432BEB88FA00D3FE24 /* ObjectAssociation.swift in Sources */,
 				D6E4B62F2BEA921500A302E8 /* Clustering.swift in Sources */,
 				D6E4B63D2BEAAFF700A302E8 /* ViewModel.swift in Sources */,
 				D6E4B6042BEA691300A302E8 /* AppDelegate.swift in Sources */,

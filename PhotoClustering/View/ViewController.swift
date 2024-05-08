@@ -9,12 +9,18 @@ import UIKit
 
 class ViewController: UICollectionViewController {
     let viewModel = ViewModel()
-    let mode: Mode = .linearMarching
+    var mode: Mode = .linearMarching
     
-    enum Mode {
-        case bubbleLooping
-        case nodeClustering
-        case linearMarching
+    enum Mode: String, CaseIterable {
+        case nodeClustering = "Node Clustering"
+        case linearMarching = "Linear Marching"
+        
+        var index: Int {
+            switch self {
+            case .nodeClustering: 0
+            case .linearMarching: 1
+            }
+        }
     }
     
     override func viewDidLoad() {
@@ -24,6 +30,12 @@ class ViewController: UICollectionViewController {
         self.collectionView.collectionViewLayout = FlowLayout()
         
         self.navigationItem.title = "Photo Clustering"
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "list.bullet"), style: .plain,
+            target: self, action: #selector(choose)
+        )
+        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "plus"), style: .plain,
             target: self, action: #selector(pick)
@@ -31,7 +43,7 @@ class ViewController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        self.viewModel.images.count
+        return self.viewModel.images.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -44,27 +56,30 @@ class ViewController: UICollectionViewController {
     }
     
     func processing() {
+        let start = Date()
+        let amount = self.viewModel.images.count
+        
         switch self.mode {
-        case .bubbleLooping: self.viewModel.bubbleLooping(completion: { [weak self] in
-            guard let `self` = self else { return }
-            self.collectionView.reloadData()
-            
-            self.hideLoading()
-        })
-            
         case .nodeClustering: self.viewModel.nodeClustering(completion: { [weak self] in
             guard let `self` = self else { return }
-            self.collectionView.reloadData()
-            
-            self.hideLoading()
+            self.reload(from: start, with: amount)
         })
             
         case .linearMarching: self.viewModel.linearMarching(completion: { [weak self] in
             guard let `self` = self else { return }
-            self.collectionView.reloadData()
-            
-            self.hideLoading()
+            self.reload(from: start, with: amount)
         })
         }
+    }
+    
+    private func reload(from start: Date, with amount: Int) {
+        self.collectionView.reloadData()
+        
+        let clusters = self.viewModel.images.count
+        let title = "In \(Date().timeIntervalSince(start).rounded(to: 4)) seconds"
+        let message = "\(amount) images clustered into \(clusters) groups with \(self.mode.rawValue)."
+        
+        self.showDialog(title: title, message: message)
+        self.hideLoading()
     }
 }

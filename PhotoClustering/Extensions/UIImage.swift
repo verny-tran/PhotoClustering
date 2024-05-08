@@ -10,17 +10,28 @@ import UIKit
 import Vision
 
 extension UIImage {
+    /// The `object association` of the extended <featurePrintObservation> property of <UIImage>.
+    /// A `static property` storing all <featurePrintObservation> object `reference addresses`.
+    private static let featurePrintObservationAssociation = ObjectAssociation<VNFeaturePrintObservation>()
+    
+    /// The `customly extended` <featurePrintObservation> property of <UIImage>.
     var featurePrintObservation: VNFeaturePrintObservation? {
+        get { return UIImage.featurePrintObservationAssociation[self] ?? self.vnFeaturePrintObservation() }
+        set { UIImage.featurePrintObservationAssociation[self] = newValue }
+    }
+    
+    private func vnFeaturePrintObservation() -> VNFeaturePrintObservation? {
         guard let cgImage = self.cgImage else { return nil }
-        
         let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        
         let request = VNGenerateImageFeaturePrintRequest()
+        request.revision = VNGenerateImageFeaturePrintRequestRevision1
         
         do {
             try requestHandler.perform([request])
             return request.results?.first as? VNFeaturePrintObservation
         } catch {
-            print("Vision error: \(error)")
+            Logger().error("VNFeaturePrintObservation.perform")
             return nil
         }
     }
