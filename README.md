@@ -12,9 +12,9 @@
 - [x] Display the *first photo* of each clusters to the view.
 - [x] Execution time results.
 
-|  Import photos  |  Mode seletion  |  Execution results  |
-|      :----:     |     :----:      |       :----:        |
-| ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Import.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Seletion.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Result.png) |
+|  Import photos  |  Mode seletion  |  Execution results  |  Groups  |
+|      :----:     |     :----:      |       :----:        |  :----:  |
+| ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Import.png) | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Seletion.png) | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Result.png) | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Groups.png) |
 
 __Known issue:__ 
 
