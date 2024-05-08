@@ -12,13 +12,9 @@
 - [x] Display the *first photo* of each clusters to the view.
 - [x] Execution time results.
 
-|  Import photos  |  Mode selection  |
-|      :----:     |      :----:      |
-| ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Import.png) | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Selection.png) |
-
-|  Execution results  |  Groups  |
-|       :----:        |  :----:  |
-| ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Result.png) | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Groups.png) |
+|  Import photos  |  Mode selection  |  Execution results  |  Groups  |
+|      :----:     |      :----:      |       :----:        |  :----:  |
+| ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Import.png) | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Selection.png) | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Result.png) | ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Groups.png) |
 
 __Known issue:__ 
 
@@ -30,7 +26,7 @@ A possible solution is to switch to [**PHImageManager**](https://developer.apple
 
 ### Huge Photo Batch Loading
 
-To optimize the loading of the image batch, we should not load the highest resolution version of them of course. To load only the image's mini-sized thumbnails, we specified the maximum number of pixels that should be in the thumbnail in [**PHPickerViewControllerDelegate**](https://developer.apple.com/documentation/photokit/phpickerviewcontrollerdelegate) using [kCGImageSourceThumbnailMaxPixelSize](https://developer.apple.com/documentation/imageio/kcgimagesourcethumbnailmaxpixelsize) (here it is `300` pixels max). Pass the entire `downsampleOptions` to the constructor [CGImageSourceCreateThumbnailAtIndex](https://developer.apple.com/documentation/imageio/1465099-cgimagesourcecreatethumbnailatin) and retrieve its data; proceed with the data only. Use a [DispatchGroup](https://developer.apple.com/documentation/dispatch/dispatchgroup) to optimize those procedures. The whoel process is as follows:
+To optimize the loading of the image batch, we should not load the highest resolution version of them of course. To load only the image's mini-sized thumbnails, we specified the maximum number of pixels that should be in the thumbnail in [**PHPickerViewControllerDelegate**](https://developer.apple.com/documentation/photokit/phpickerviewcontrollerdelegate) using [`kCGImageSourceThumbnailMaxPixelSize`](https://developer.apple.com/documentation/imageio/kcgimagesourcethumbnailmaxpixelsize) (here it is `300` pixels max). Pass the entire `downsampleOptions` dictionary to the constructor [`CGImageSourceCreateThumbnailAtIndex`](https://developer.apple.com/documentation/imageio/1465099-cgimagesourcecreatethumbnailatin) and retrieve its data; proceed with the data only. Use a [`DispatchGroup`](https://developer.apple.com/documentation/dispatch/dispatchgroup) to optimize those procedures. The whoel process is as follows:
 
 ```swift
 let dispatchGroup = DispatchGroup()
