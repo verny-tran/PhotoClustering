@@ -26,7 +26,7 @@ A possible solution is to switch to [**PHImageManager**](https://developer.apple
 
 ### Huge Photo Batch Loading
 
-To optimize the loading of the image batch, we should not load the highest resolution version of them of course. To load only the image's mini-sized thumbnails, we specified the maximum number of pixels that should be in the thumbnail in [**PHPickerViewControllerDelegate**](https://developer.apple.com/documentation/photokit/phpickerviewcontrollerdelegate) using [`kCGImageSourceThumbnailMaxPixelSize`](https://developer.apple.com/documentation/imageio/kcgimagesourcethumbnailmaxpixelsize) (here it is `300` pixels max). Pass the entire `downsampleOptions` dictionary to the constructor [`CGImageSourceCreateThumbnailAtIndex`](https://developer.apple.com/documentation/imageio/1465099-cgimagesourcecreatethumbnailatin) and retrieve its data; proceed with the data only. Use a [`DispatchGroup`](https://developer.apple.com/documentation/dispatch/dispatchgroup) to optimize those procedures. The whoel process is as follows:
+To optimize the loading of the image batch, we should not load the highest resolution version of them of course. To load only the image's mini-sized thumbnails, we specified the maximum number of pixels that should be in the thumbnail in [**PHPickerViewControllerDelegate**](https://developer.apple.com/documentation/photokit/phpickerviewcontrollerdelegate) using [`kCGImageSourceThumbnailMaxPixelSize`](https://developer.apple.com/documentation/imageio/kcgimagesourcethumbnailmaxpixelsize) (here it is `300` pixels max). Pass the entire `downsampleOptions` dictionary to the constructor [`CGImageSourceCreateThumbnailAtIndex`](https://developer.apple.com/documentation/imageio/1465099-cgimagesourcecreatethumbnailatin) and retrieve its data; proceed with the data only. Use a [`DispatchGroup`](https://developer.apple.com/documentation/dispatch/dispatchgroup) to optimize those procedures. The whole process is as follows:
 
 ```swift
 let dispatchGroup = DispatchGroup()
@@ -42,9 +42,14 @@ itemProviders.forEach { itemProvider in
         if let error = error { Logger().error("itemProvider.loadFileRepresentation \(error.localizedDescription)") }
         
         guard let url = url else { dispatchGroup.leave(); return }
-        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        
+        let sourceOptions = [
+            kCGImageSourceShouldCache: false,
+            kCGImageSourceCreateThumbnailFromImageIfAbsent: true
+        ] as CFDictionary
         
         guard let source = CGImageSourceCreateWithURL(url as CFURL, sourceOptions) else { dispatchGroup.leave(); return }
+        
         let downsampleOptions = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceCreateThumbnailWithTransform: true,
@@ -52,22 +57,9 @@ itemProviders.forEach { itemProvider in
         ] as CFDictionary
         
         guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOptions) else { dispatchGroup.leave(); return }
-        let data = NSMutableData()
-        
-        guard let imageDestination = CGImageDestinationCreateWithData(data, UTType.jpeg.identifier as CFString, 1, nil) else { return }
-        
-        let isPNG: Bool = {
-            guard let utType = cgImage.utType else { return false }
-            return (utType as String) == UTType.png.identifier
-        }()
-        
-        let destinationProperties = [kCGImageDestinationLossyCompressionQuality: isPNG ? 1.0 : 0.75] as CFDictionary
-        
-        CGImageDestinationAddImage(imageDestination, cgImage, destinationProperties)
-        CGImageDestinationFinalize(imageDestination)
         
         dispatchQueue.sync {
-            guard let image = UIImage(data: data as Data) else { dispatchGroup.leave(); return }
+            let image = UIImage(cgImage: cgImage)
             self.viewModel.images.append(image)
         }
         
@@ -78,7 +70,6 @@ itemProviders.forEach { itemProvider in
 dispatchGroup.notify(queue: .main) {
     DispatchQueue.main.async { self.processing() }
 }
-
 ```
 
 ### Feature Print Observation

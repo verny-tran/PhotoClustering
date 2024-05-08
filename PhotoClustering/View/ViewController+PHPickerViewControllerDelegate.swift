@@ -43,9 +43,14 @@ extension ViewController: PHPickerViewControllerDelegate {
                     if let error = error { Logger().error("itemProvider.loadFileRepresentation \(error.localizedDescription)") }
                     
                     guard let url = url else { dispatchGroup.leave(); return }
-                    let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+                    
+                    let sourceOptions = [
+                        kCGImageSourceShouldCache: false,
+                        kCGImageSourceCreateThumbnailFromImageIfAbsent: true
+                    ] as CFDictionary
                     
                     guard let source = CGImageSourceCreateWithURL(url as CFURL, sourceOptions) else { dispatchGroup.leave(); return }
+                    
                     let downsampleOptions = [
                         kCGImageSourceCreateThumbnailFromImageAlways: true,
                         kCGImageSourceCreateThumbnailWithTransform: true,
@@ -53,22 +58,9 @@ extension ViewController: PHPickerViewControllerDelegate {
                     ] as CFDictionary
                     
                     guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOptions) else { dispatchGroup.leave(); return }
-                    let data = NSMutableData()
-                    
-                    guard let imageDestination = CGImageDestinationCreateWithData(data, UTType.jpeg.identifier as CFString, 1, nil) else { return }
-                    
-                    let isPNG: Bool = {
-                        guard let utType = cgImage.utType else { return false }
-                        return (utType as String) == UTType.png.identifier
-                    }()
-                    
-                    let destinationProperties = [kCGImageDestinationLossyCompressionQuality: isPNG ? 1.0 : 0.75] as CFDictionary
-                    
-                    CGImageDestinationAddImage(imageDestination, cgImage, destinationProperties)
-                    CGImageDestinationFinalize(imageDestination)
                     
                     dispatchQueue.sync {
-                        guard let image = UIImage(data: data as Data) else { dispatchGroup.leave(); return }
+                        let image = UIImage(cgImage: cgImage)
                         self.viewModel.images.append(image)
                     }
                     
