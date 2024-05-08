@@ -8,17 +8,19 @@
 
 ## Features
 - [x] Import large batch of photos *(Up to `10.000` photos)*.
-- [x] Multiple clustering approaches *(with a distance threshold of `0.5`)*.
+- [x] Multiple clustering approaches *(with a distance threshold of `10.0`)*.
 - [x] Display the *first photo* of each clusters to the view.
 - [x] Execution time results.
 
 |  Import photos  |  Mode seletion  |  Execution results  |  Groups  |
 |      :----:     |     :----:      |       :----:        |  :----:  |
-|  |  |  |  |
+| ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Import.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Seletion.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Result.png) | ![](https://github.com/verny-tran/LoadControl/blob/main/Resources/Groups.png) |
 
-__Known issue:__ This app employed [**PHPickerViewController**](https://developer.apple.com/documentation/photokit/phpickerviewcontroller) of [PhotoKit](https://developer.apple.com/documentation/photokit) as it's image picker; nevertheless, a known issue has been identified: you cannot import an amount of photographs larger than `503` items (Yes, exactly `> 503` images, I believe it's an iOS bug because the [Freeform](https://support.apple.com/en-vn/guide/iphone/iphb86e84e2b/ios) app also got the same issue, or it just could be due to my phone). 
+__Known issue:__ 
 
-A possible solution is to switch to [**PHImageManager**](https://developer.apple.com/documentation/photokit/phimagemanager) and use [`requestImage(for:targetSize:contentMode:options:resultHandler:)`](https://developer.apple.com/documentation/photokit/phimagemanager/1616964-requestimage). However, I will not implement it right now.
+This app employed [**PHPickerViewController**](https://developer.apple.com/documentation/photokit/phpickerviewcontroller) of [**PhotoKit**](https://developer.apple.com/documentation/photokit) as it's image picker; nevertheless, a known issue has been identified: you cannot import an amount of photographs larger than `503` items (Yes, exactly `>503` images, I believe it's an *iOS bug* because the [Freeform](https://support.apple.com/en-vn/guide/iphone/iphb86e84e2b/ios) app also got the same issue, or it just could be due to my phone). 
+
+A possible solution is to switch to [**PHImageManager**](https://developer.apple.com/documentation/photokit/phimagemanager) and use [`requestImage(for:)`](https://developer.apple.com/documentation/photokit/phimagemanager/1616964-requestimage). However, I will not implement it right now.
 
 ## Approaches
 
@@ -33,31 +35,37 @@ $$
 While comparing the distance between two arbitrary vectors in **iOS 16** is questionable, measuring the distance between two *normalized* vectors in **iOS 17** is far more significant. In data analysis, a typical measure of vector similarity is the **cosine distance**, which is closely connected to the vector distance by the following formula, where *θ* is the angle between the two vectors *u* and *v*:
 
 $$
-\theta = 1 - cos(\theta) = \frac{\Vert u-v \Vert^2}{2} = \frac{d^2}{2}
+distance = 1 - cos(\theta) = \frac{\Vert u-v \Vert^2}{2} = \frac{d^2}{2}
 $$
 
 - In **iOS 16**, a feature print is a *non-normalized* float vector having `2048` values. Typical distance values range between `0.0 ~ 40.0`.
 - While in **iOS 17**, a feature print is a *normalized* float vector of length `768`. Distance value range between `0.0 ~ 2.0` (in my testing set, the highest distance was `1.4`).
 
-Because the app must support users on **iOS 16** - which don’t have access to the latest [Vision](https://developer.apple.com/documentation/vision/) framework, so I did specify an earlier revision:
+Because the app must support users on **iOS 16** - which don’t have access to the latest [**Vision**](https://developer.apple.com/documentation/vision/) framework, so I did specify an earlier revision:
 
 ```swift
 visionRequest.revision = VNGenerateImageFeaturePrintRequestRevision1
 ```
 
-__Specified threshold:__ Because we stick with the [*revision 1*](https://developer.apple.com/documentation/vision/vngenerateimagefeatureprintrequestrevision1) of [**VNFeaturePrintObservation**](https://developer.apple.com/documentation/vision/vnfeatureprintobservation) which ranges from `0.0` to `40.0`. We took an empirical method to determine an adequate similarity criterion for our use case (removing duplicates or quasi-duplicates from a collection of photos). We combined images of very similar dog breeds with images of various cats, ducks, towns, human faces, and other dog breeds. Then we asked [Vision](https://developer.apple.com/documentation/vision/) to calculate the distance between each pair of photographs, and we repeated the experiment with other datasets (a mix of similar and distinct pictures). 
+__Specified threshold:__ 
 
-Every time, we noticed that a cutoff value spreading between `9.0` and `11.0` could separate the cluster of similar pictures from the different ones. The ideal `threshold` will fall to around one-quarter of the maximum value (`40.0`), which in this case is `10.0 ± 1.0`.
+Because we stick with the [revision 1](https://developer.apple.com/documentation/vision/vngenerateimagefeatureprintrequestrevision1) of [**VNFeaturePrintObservation**](https://developer.apple.com/documentation/vision/vnfeatureprintobservation) which ranges from `0.0` to `40.0`. We took an empirical method to determine an adequate similarity criterion for our use case (removing duplicates or quasi-duplicates from a collection of photos). We combined images of very similar dog breeds with images of various cats, ducks, towns, human faces, and other dog breeds. Then we asked [**Vision**](https://developer.apple.com/documentation/vision) to calculate the distance between each pair of photographs, and we repeated the experiment with other datasets (a mix of similar and distinct pictures). 
+
+Every time, we noticed that a cutoff value spreading between `9.0` and `11.0` could separate the cluster of similar pictures from the different ones. The ideal **threshold** will fall to around one-quarter of the maximum value (`40.0`), which in this case is `10.0 ± 1.0`.
 
 ```swift
 let threshold: Float = 10.0
 ```
 
+## Approaches
+
 ### 1. Node Clustering
 
 `Node clustering`, also known as `Community Detection` is the process of starting with each node as its own cluster and merging clusters until a balancing point is reached.
 
-**DISCUSSION:** The function's goal is to generate an **undirected graph** with vertices connected by *weighted edges*. The *lower the edge value*, the *more similar* the vertices connected by that edge. This function creates *clusters* for the *specified graph*, with each cluster including vertices that are similar to one another.
+![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Graph.png)
+
+**DISCUSSION:** The function's goal is to generate an **undirected graph** with vertices connected by *weighted edges* (which in this case is the distance of similarity between the photos). The *lower the edge value*, the *more similar* the vertices connected by that edge. This function creates *clusters* for the *specified graph*, with each cluster including vertices that are similar to one another.
 
 The construction of the cluster is determined by the **threshold** value supplied as input. If the *weight of an edge* between two clusters divided by the *minimum weight of clusters* is *less than or equal* to the *tolerance threshold*, the two clusters are *combined into a single cluster*. By default, each vertex is a cluster with a weight of `1`.
 
@@ -71,28 +79,29 @@ __Evaluation:__
 
 | Approach   | Time complexity | Benefits | Downsides |
 |------------|-----------------|----------|-----------|
-| Node Clustering | O(n^2) | Precision, will works with all kind of input variations. Extendable, is a potential solution. | Timely execution. |
+| Node Clustering | O(n^2^) | Precision, will works with all kind of input variations. Extendable, is a potential solution. | Timely execution. |
 | Linear Marching | O(n)   | Fast, rapid. | Resulted in fragmented but similar clusters, unprecise. |
 
-__Performance:__ These tests and records are performed on my device - an [iPhone XS Max](https://support.apple.com/en-us/111880).
+__Performance:__ 
 
-| Amount of images | Node Clustering | Linear Marching |
-|------------------|-----------------|-----------------|
-| 10               | `1.0418` secs   | `0.1875` secs   |
-| 100              | `101.8176` secs | `2.2491` secs   |
-| 500              | Too long...     | `10.2574` secs  |
+These tests and records are performed on my device - an [iPhone XS Max](https://support.apple.com/en-us/111880).
+
+| Amount of images | Node Clustering    | Linear Marching    |
+|------------------|--------------------|--------------------|
+| 10               | `1.0418` seconds   | `0.1875` seconds   |
+| 100              | `101.8176` seconds | `2.2491` seconds   |
+| 500              | Too long...        | `10.2574` seconds  |
 
 ## Data
 
-I used the [Stanford Dogs](http://vision.stanford.edu/aditya86/ImageNetDogs) dataset, which contains about `20k` photos classified into `120` breeds of dogs. There are *relatively few* photographs for each breed, and some are *duplicated*, which is a good reason to use it. The breeds I chose for the performance test include **Peking**, **Shih-Tzu**, **Blenheim Spaniel** and **Papillon**, which are all quite similar visually.
+I used the [**Stanford Dogs**](http://vision.stanford.edu/aditya86/ImageNetDogs) dataset, which contains about `20.000` photos classified into `120` breeds of dogs. There are *relatively few* photographs for each breed, and some are *duplicated*, which is a good reason to use it. The breeds I chose for the performance test include [Pekingese](https://en.wikipedia.org/wiki/Pekingese), [Shih-Tzu](https://en.wikipedia.org/wiki/Shih_Tzu), [Blenheim Spaniel](https://en.wikipedia.org/wiki/Cavalier_King_Charles_Spaniel) and [Papillon](https://en.wikipedia.org/wiki/Papillon_dog), which are all quite similar visually.
 
 ## Requirements
 - **iOS** `16.0+`
 - **Swift** `5.1+`
 - **Xcode** `14.0+`
 
-__Installation:__
-This project doesn't contain any *package dependencies*; just simply register the bundle with your developer account and build it.
+__Installation:__ This project doesn't contain any *package dependencies*; just simply register the bundle with your developer account and build it.
 
 ## License
 
