@@ -142,7 +142,7 @@ These tests and records are performed on my device - an [iPhone XS Max](https://
 
 ## Data
 
-I used the [**Stanford Dogs**](http://vision.stanford.edu/aditya86/ImageNetDogs) dataset, which contains about `20.000` photos classified into `120` breeds of dogs. There are *relatively few* photographs for each breed, and some are *duplicated*, which is a good reason to use it. The breeds I chose for the performance test include [Pekingese](https://en.wikipedia.org/wiki/Pekingese), [Shih-Tzu](https://en.wikipedia.org/wiki/Shih_Tzu), [Blenheim Spaniel](https://en.wikipedia.org/wiki/Cavalier_King_Charles_Spaniel) and [Papillon](https://en.wikipedia.org/wiki/Papillon_dog), which are all quite similar visually.
+I used the [**Stanford Dogs**](http://vision.stanford.edu/aditya86/ImageNetDogs) dataset, which contains about `≈20.000` photos classified into `120` breeds of dogs. There are *relatively few* photographs for each breed, and some are *duplicated*, which is a good reason to use it. The breeds I chose for the performance test include [Pekingese](https://en.wikipedia.org/wiki/Pekingese), [Shih-Tzu](https://en.wikipedia.org/wiki/Shih_Tzu), [Blenheim Spaniel](https://en.wikipedia.org/wiki/Cavalier_King_Charles_Spaniel) and [Papillon](https://en.wikipedia.org/wiki/Papillon_dog), which are all quite similar visually.
 
 ## Requirements
 - **iOS** `16.0+`
