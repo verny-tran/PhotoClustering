@@ -109,7 +109,7 @@ let threshold: Float = 10.0
 
 ### 1. Node Clustering
 
-`Node clustering`, also known as `Community Detection` is the process of starting with each node as its own cluster and merging clusters until a balancing point is reached.
+**Node clustering**, also known as *Community Detection* is the process of starting with each node as its own cluster and merging clusters until a balancing point is reached.
 
 ![](https://github.com/verny-tran/PhotoClustering/blob/main/Resources/Graph.png)
 
