@@ -55,24 +55,20 @@ class Graph {
     }
 
     func newClusters(from map: [Int : [Edge]]) -> Set<Set<Int>>? {
-        if !map.isEmpty {
-            var checkSet = Set<Int>()
-            var clusterSet = Set<Set<Int>>()
+        guard !map.isEmpty else { return nil }
 
-            for (source, _) in map {
-                if !checkSet.contains(source) {
-                    var set = Set<Int>()
-                    set = self.newSet(start: source, set: &set)
-                    
-                    checkSet.formUnion(set)
-                    clusterSet.insert(set)
-                }
-            }
+        var visited = Set<Int>()
+        var clusters = Set<Set<Int>>()
+
+        for (source, _) in map where !visited.contains(source) {
+            var set = Set<Int>()
+            set = self.newSet(start: source, set: &set)
             
-            return clusterSet
+            visited.formUnion(set)
+            clusters.insert(set)
         }
         
-        return nil
+        return clusters
     }
 
     func isLoop(from start: Int, to end: Int, assignTo set: inout Set<Int>) -> Bool {
@@ -99,7 +95,7 @@ class Graph {
     private func newSet(start: Int, set: inout Set<Int>) -> Set<Int> {
         set.insert(start)
         
-        guard let list = map[start] else { return set }
+        guard let list = self.map[start] else { return set }
         for node in list where !set.contains(node.destination) {
             _ = self.newSet(start: node.destination, set: &set)
         }

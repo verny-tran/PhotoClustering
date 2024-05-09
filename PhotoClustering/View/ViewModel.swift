@@ -40,10 +40,10 @@ final class ViewModel {
             }
         }
         
-        let clustering = SimpleClustering()
-        edges.forEach { edge in clustering.addEdge(edge) }
+        let depthFirstSearch = DepthFirstSearch()
+        edges.forEach { edge in depthFirstSearch.add(edge) }
 
-        let clusters = clustering.clusterVertices(with: self.threshold)
+        let clusters = depthFirstSearch.cluster(with: self.threshold)
         clusters.enumerated().forEach { index, cluster in
             Logger().info("Cluster \(index): \(cluster)")
         }

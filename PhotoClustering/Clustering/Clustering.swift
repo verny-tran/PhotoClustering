@@ -21,7 +21,7 @@ class Clustering {
     ///   - vertex2: The second vertex.
     ///   - weight: The weight of the connection between the vertexes.
     ///
-    func addEdge(_ edge: (vertex1: Int, vertex2: Int, weight: Float)) {
+    func add(_ edge: (vertex1: Int, vertex2: Int, weight: Float)) {
         /// Returns ``false`` if given vertex `is blank` or 
         /// *-ve weight of node edge* already exists` in the <PriorityQueue>.
         if edge.vertex1 != edge.vertex2 && edge.weight > 0 && !self.graph.isEdgeExists(edge.vertex1, edge.vertex2) {
@@ -33,11 +33,10 @@ class Clustering {
     
     /// This method `forms the clusters` from the given graph.
     ///
-    /// - Parameter tolerance: The clustering predefined tolerance.
-    /// 
+    /// - Parameter threshold: The clustering predefined tolerance.
     /// - Returns: The clusters of grouped nodes.
     ///
-    func clusterVertices(with threshold: Float) -> Set<Set<Int>>? {
+    func cluster(with threshold: Float) -> Set<Set<Int>>? {
         /// Proceed only if `threshold is non -ve` value.
         guard threshold >= 0 else { return nil }
         
@@ -45,7 +44,7 @@ class Clustering {
         for edge in self.graph.priorityQueue.elements { priorityQueue.enqueue(edge) }
         
         while !self.graph.priorityQueue.elements.isEmpty {
-            let edge = self.graph.priorityQueue.elements.removeFirst()
+            guard let edge = self.graph.priorityQueue.dequeue() else { continue }
             
             /// For `first edge`, directly add the edge to the graph.
             if !self.graph.map.isEmpty {
