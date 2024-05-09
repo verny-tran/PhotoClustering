@@ -24,7 +24,8 @@ class Clustering {
     func add(_ edge: (vertex1: Int, vertex2: Int, weight: Float)) {
         /// Returns ``false`` if given vertex `is blank` or 
         /// *-ve weight of node edge* already exists` in the <PriorityQueue>.
-        if edge.vertex1 != edge.vertex2 && edge.weight > 0 && !self.graph.isEdgeExists(edge.vertex1, edge.vertex2) {
+        if edge.vertex1 != edge.vertex2 && edge.weight >= 0 &&
+            !self.graph.isEdgeExists(edge.vertex1, edge.vertex2) {
             
             let edge = Edge(from: edge.vertex1, to: edge.vertex2, with: edge.weight)
             self.graph.priorityQueue.enqueue(edge)
