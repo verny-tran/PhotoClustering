@@ -18,7 +18,7 @@
 
 __Known issue:__ 
 
-This app employed [**PHPickerViewController**](https://developer.apple.com/documentation/photokit/phpickerviewcontroller) of [**PhotoKit**](https://developer.apple.com/documentation/photokit) as it's image picker; nevertheless, a known issue has been identified: you cannot import an amount of photos larger than `503` items, or else it'll be throttled (and yes, exactly `>503` images). I believe it's an *iOS bug* because the [Freeform](https://support.apple.com/en-vn/guide/iphone/iphb86e84e2b/ios) app also got the same issue, or it just could be due to my device. 
+This app employed [**PHPickerViewController**](https://developer.apple.com/documentation/photokit/phpickerviewcontroller) of [**PhotoKit**](https://developer.apple.com/documentation/photokit) as it's image picker; nevertheless, a known issue has been identified: You can't import an amount of photos larger than `503` items, or else it'll be throttled (and yes, exactly `>503` images). I believe it's an *iOS bug* because the [Freeform](https://support.apple.com/en-vn/guide/iphone/iphb86e84e2b/ios) app also got the same issue, or it just could be due to my device. 
 
 > A possible solution is to switch to [**PHImageManager**](https://developer.apple.com/documentation/photokit/phimagemanager) and use [`requestImage(for:)`](https://developer.apple.com/documentation/photokit/phimagemanager/1616964-requestimage). However, I will not implement it right now.
 
