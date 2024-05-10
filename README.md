@@ -74,7 +74,7 @@ dispatchGroup.notify(queue: .main) {
 
 ### Feature Print Observation
 
-The similarity distance between photos is calculated using the `API`: [`computeDistance(_:to:)`](https://developer.apple.com/documentation/vision/vnfeatureprintobservation/3182823-computedistance) of  [**VNFeaturePrintObservation**](https://developer.apple.com/documentation/vision/vnfeatureprintobservation). The underling backbone of it is basically similar to that of the combination between [MobileNet](https://arxiv.org/abs/1704.04861) and [PCA](https://en.wikipedia.org/wiki/Principal_component_analysis), which simply computes the very basic [Euclidian distance](https://en.wikipedia.org/wiki/Euclidean_distance) between two feature print vectors, given by: 
+The similarity distance between photos is calculated using the `API`: [`computeDistance(_:to:)`](https://developer.apple.com/documentation/vision/vnfeatureprintobservation/3182823-computedistance) of  [**VNFeaturePrintObservation**](https://developer.apple.com/documentation/vision/vnfeatureprintobservation). The underling backbone of it is basically similar to that of the combination between [MobileNet](https://arxiv.org/abs/1704.04861) and [PCA](https://en.wikipedia.org/wiki/Principal_component_analysis), which simply computes the very basic [Euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance) between two feature print vectors, given by: 
 
 $$
 \Vert u-v \Vert = \sqrt{\sum_{i=1}^n (u_i - v_i)^2}
