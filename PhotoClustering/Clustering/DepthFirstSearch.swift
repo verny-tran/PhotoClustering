@@ -15,7 +15,7 @@ class DepthFirstSearch {
     /// - Parameters:
     ///   - vertex1: The first vertex.
     ///   - vertex2: The second vertex.
-    ///   - weight: The weight of the connection between the vertexes.
+    ///   - weight: The weight of the connection between the vertices.
     ///
     func add(_ edge: (vertex1: Int, vertex2: Int, weight: Float)) {
         if self.map[edge.vertex1] == nil { self.map[edge.vertex1] = [] }
@@ -45,7 +45,7 @@ class DepthFirstSearch {
     }
     
     /// **Depth First Search**, or <DFS>.
-    /// This method `visits the vertexes` in the map, `mark the visited to clusters`.
+    /// This method `visits the vertices` in the map, `mark the visited to clusters`.
     ///
     /// - Remark: It is a `recursive function`.
     ///

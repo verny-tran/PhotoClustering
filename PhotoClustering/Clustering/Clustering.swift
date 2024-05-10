@@ -19,7 +19,7 @@ class Clustering {
     /// - Parameters:
     ///   - vertex1: The first vertex.
     ///   - vertex2: The second vertex.
-    ///   - weight: The weight of the connection between the vertexes.
+    ///   - weight: The weight of the connection between the vertices.
     ///
     func add(_ edge: (vertex1: Int, vertex2: Int, weight: Float)) {
         /// Returns ``false`` if given vertex `is blank` or 
