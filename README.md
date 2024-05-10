@@ -80,7 +80,7 @@ $$
 \Vert u-v \Vert = \sqrt{\sum_{i=1}^n (u_i - v_i)^2}
 $$
 
-While comparing the distance between two arbitrary vectors in **iOS 16** is questionable, measuring the distance between two *normalized* vectors in **iOS 17** is far more significant. In data analysis, a typical measure of vector similarity is the **cosine distance**, which is closely connected to the vector distance by the following formula, where $θ$ is the angle between the two vectors $u$ and $v$:
+While comparing the distance between two arbitrary vectors in **iOS 16** is questionable, measuring the distance between two *normalized* vectors in **iOS 17** is far more significant. In data analysis, a typical measure of vector similarity is the **cosine distance**, which is closely connected to the vector distance by the following formula, where *θ* is the angle between the two vectors *u* and *v*:
 
 $$
 distance = 1 - cos(\theta) = \frac{\Vert u-v \Vert^2}{2} = \frac{d^2}{2}
@@ -127,8 +127,8 @@ __Evaluation:__
 
 | Approach   | Time complexity | Benefits | Downsides |
 |------------|-----------------|----------|-----------|
-| Node Clustering | $$O(n^2)$$ | Precision, will works with all kind of input variations. Extendable, is a potential solution. | Timely execution. |
-| Linear Marching | $$O(n)$$   | Fast, rapid. | Resulted in fragmented but similar clusters, unprecise. |
+| Node Clustering | $O(n^2)$   | Precision, will works with all kind of input variations. Extendable, is a potential solution. | Timely execution. |
+| Linear Marching | $O(n)$     | Fast, rapid. | Resulted in fragmented but similar clusters, unprecise. |
 
 __Performance:__ 
 
