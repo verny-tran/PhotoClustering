@@ -127,8 +127,8 @@ __Evaluation:__
 
 | Approach   | Time complexity | Benefits | Downsides |
 |------------|-----------------|----------|-----------|
-| Node Clustering | $O(n^2)$   | Precision, will works with all kind of input variations. Extendable, is a potential solution. | Timely execution. |
-| Linear Marching | $O(n)$     | Fast, rapid. | Resulted in fragmented but similar clusters, unprecise. |
+| Node Clustering | $$O(n^2)$$ | Precision, will works with all kind of input variations. Extendable, is a potential solution. | Timely execution. |
+| Linear Marching | $$O(n)$$   | Fast, rapid. | Resulted in fragmented but similar clusters, unprecise. |
 
 __Performance:__ 
 
