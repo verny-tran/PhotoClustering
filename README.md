@@ -123,14 +123,14 @@ The construction of the clusters is determined by the **threshold** value suppli
 
 **IMPORTANT:** This approach results in *fragmented but similar clusters*, which is a *disadvantage* but offset by it's optimized *time complexity*.
 
-#### Evaluation:
+### Evaluation:
 
 | Approach   | Time complexity | Benefits | Downsides |
 |------------|-----------------|----------|-----------|
 | Node Clustering | $$O(n^2)$$ | Precision, will works with all kind of input variations. Extendable, is a potential solution. | Timely execution. |
 | Linear Marching | $$O(n)$$   | Fast, rapid. | Resulted in fragmented but similar clusters, unprecise. |
 
-#### Performance:
+### Performance:
 
 These tests and records are performed on my device - an [iPhone XS Max](https://support.apple.com/en-us/111880).
 
