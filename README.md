@@ -99,7 +99,7 @@ __Specified threshold:__
 
 Because we stick with the [revision 1](https://developer.apple.com/documentation/vision/vngenerateimagefeatureprintrequestrevision1) of [**VNFeaturePrintObservation**](https://developer.apple.com/documentation/vision/vnfeatureprintobservation) which ranges from `0.0` to `40.0`. We took an empirical method to determine an adequate similarity criterion for our use case (removing duplicates or quasi-duplicates from a collection of photos). We combined images of very similar dog breeds with images of various cats, ducks, towns, human faces, and other dog breeds. Then we asked [**Vision**](https://developer.apple.com/documentation/vision) to calculate the distance between each pair of photographs, and we repeated the experiment with other datasets (a mix of similar and distinct pictures). 
 
-Every time, we noticed that a cutoff value spreading between `9.0` and `11.0` could separate the cluster of similar pictures from the different ones. The ideal **threshold** will fall to around one-quarter of the maximum value (`40.0`), which in this case is `10.0 ± 1.0`.
+Every time, we noticed that a cutoff value spreading between `9.0` and `11.0` could separate the cluster of similar pictures from the different ones. The ideal **threshold** will fall to around one-quarter of the maximum value (`40.0`), which in this case is `10.0±1.0`.
 
 ```swift
 let threshold: Float = 10.0
