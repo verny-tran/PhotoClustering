@@ -89,7 +89,7 @@ $$
 - In **iOS 16**, a feature print is a *non-normalized* float vector having `2048` values. Typical distance values range between `0.0 ~ 40.0`.
 - While in **iOS 17**, a feature print is a *normalized* float vector of length `768`. Distance value range between `0.0 ~ 2.0` (in my testing set, the highest distance was `1.4`).
 
-Because the app must support users on **iOS 16** - which don’t have access to the latest [**Vision**](https://developer.apple.com/documentation/vision/) framework, so I did specify an earlier revision:
+Because the app *must support* users on **iOS 16** - which don’t have access to the latest [**Vision**](https://developer.apple.com/documentation/vision/) framework, so I did specify an earlier revision:
 
 ```swift
 visionRequest.revision = VNGenerateImageFeaturePrintRequestRevision1
